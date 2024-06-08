@@ -7,6 +7,7 @@ except ImportError:
   from llama_index.core import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
 import json
 from datetime import datetime
+import uuid
     
 st.set_page_config(page_title="BioMed Advertisement Chat", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 openai.api_key = "sk-proj-GE4QnuqouxONkJ8S7626T3BlbkFJA7d1AGUMAU8Q9TqwZl8G"
@@ -26,7 +27,7 @@ POST_TEXT = '''
 st.info(POST_TEXT)
 # Job Age Sex (M F)
 # Ключевые слова из вопросов
-         
+
 if "messages" not in st.session_state.keys(): # Initialize the chat messages history
     st.session_state.messages = [
         {"role": "assistant", "content": "Задай любой вопрос про этот пост"}
@@ -43,6 +44,17 @@ def load_data():
 
 index = load_data()
 
+if "user" not in st.session_state.keys():
+    st.session_state.user = {
+       "user_id": uuid.uuid4(),
+       "job": '',
+       "sex": 'M',
+       "age": ''
+    }
+
+if "form_submitted" not in st.session_state.keys():
+    st.session_state.form_submitted = False
+
 if "chat_engine" not in st.session_state.keys(): # Initialize the chat engine
         st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
 
@@ -52,6 +64,21 @@ if prompt := st.chat_input("Your question"): # Prompt for user input and save to
 for message in st.session_state.messages: # Display the prior chat messages
     with st.chat_message(message["role"]):
         st.write(message["content"])
+
+
+# form to collect user data
+if st.session_state.form_submitted == False:
+    with st.form("used_data_form"):
+        st.write("Заполните данные о себе")
+    
+        st.session_state.user['job'] = st.text_input("Род деятельности")
+        st.session_state.user['age'] = st.number_input("Возраст", min_value=0, step=1, format="%d")
+        st.session_state.user['sex'] = 'F' if st.toggle("Пол М/Ж") else 'M'
+        
+        # Every form must have a submit button.
+        st.session_state.form_submitted = st.form_submit_button("Подтвердить")
+        print(st.session_state.form_submitted)
+
 
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
@@ -63,9 +90,13 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.session_state.messages.append(message) # Add response to message history
             timestamp = datetime.now().isoformat()
             data = {
+                "userId": str(st.session_state.user['user_id']),
                 "prompt": str(prompt),
                 "response": str(response.response),
-                "timestamp": str(timestamp)
+                "timestamp": str(timestamp),
+                "job": str(st.session_state.user['job']),
+                "age": str(st.session_state.user['age']),
+                "sex": st.session_state.user['sex']
             }
             json_data = json.dumps(data, ensure_ascii=False)
 
