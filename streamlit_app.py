@@ -8,14 +8,25 @@ except ImportError:
 import json
 from datetime import datetime
 import uuid
-
-st.set_page_config(page_title="BioMed Addvertisement Chat", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
+    
+st.set_page_config(page_title="BioMed Advertisement Chat", page_icon="🦙", layout="centered", initial_sidebar_state="auto", menu_items=None)
 openai.api_key = "sk-proj-GE4QnuqouxONkJ8S7626T3BlbkFJA7d1AGUMAU8Q9TqwZl8G"
 st.title("BioMed Addvertisement Chat 💬🦙")
 st.info("Загляни на [сайт BioMed](https://biomedglobal.net/?section=promo)", icon="📃")
+IMAGE_PATH = "posts/biomed_molecular.png"
+st.image(IMAGE_PATH, caption='BioMed MOLECULAR WHITE')
+POST_TEXT = '''
+**Новый тип отбеливания от BioMed** — высокая эффективность отбеливания без повреждений.
 
-# picture and chat with assistant
-st.image('posts/biomed_molecular.png', caption='BioMed MOLECULAR WHITE')
+2 начно доказанных подтверждения от InterTek (UK)
+
+**0% повреждения эмали**
+
+Отбеливание как у пероксидного отбеливания
+'''
+st.info(POST_TEXT)
+# Job Age Sex (M F)
+# Ключевые слова из вопросов
 
 if "messages" not in st.session_state.keys(): # Initialize the chat messages history
     st.session_state.messages = [
@@ -73,7 +84,7 @@ if st.session_state.form_submitted == False:
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = st.session_state.chat_engine.chat(prompt)
+            response = st.session_state.chat_engine.chat(f"Use this information about post and answer questions: {POST_TEXT}. " + prompt)
             st.write(response.response)
             message = {"role": "assistant", "content": response.response}
             st.session_state.messages.append(message) # Add response to message history
