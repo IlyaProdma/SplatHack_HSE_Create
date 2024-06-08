@@ -22,9 +22,10 @@ def build_dataframe():
 
 st.title("Распределение количества ответов по возрастам")
 source = build_dataframe().drop_duplicates(['userId', 'age'])
-chart = alt.Chart(source).mark_bar().encode(
-    x=alt.X('age', title='Возраст', axis=alt.Axis(labelAngle=0)),
-    y=alt.Y('count():Q', title='Кол-во респондентов', axis=alt.Axis(tickMinStep=1)),
-    tooltip='count()'
-).interactive()
-st.altair_chart(chart, use_container_width=True)
+if not source.empty:
+    chart = alt.Chart(source).mark_bar().encode(
+        x=alt.X('age', title='Возраст', axis=alt.Axis(labelAngle=0)),
+        y=alt.Y('count():Q', title='Кол-во респондентов', axis=alt.Axis(tickMinStep=1)),
+        tooltip='count()'
+    ).interactive()
+    st.altair_chart(chart, use_container_width=True)
