@@ -5,3 +5,6 @@ llama-index-llms-openai
 nltk
 pypdf
 matplotlib
+altair
+wordcloud
+matplotlib
