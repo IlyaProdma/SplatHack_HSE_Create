@@ -14,15 +14,25 @@ openai.api_key = "sk-proj-GE4QnuqouxONkJ8S7626T3BlbkFJA7d1AGUMAU8Q9TqwZl8G"
 st.title("BioMed Addvertisement Chat 💬🦙")
 st.info("Загляни на [сайт BioMed](https://biomedglobal.net/?section=promo)", icon="📃")
 IMAGE_PATH = "posts/biomed_molecular.png"
-st.image(IMAGE_PATH, caption='BioMed MOLECULAR WHITE')
+#st.image(IMAGE_PATH, caption='BioMed MOLECULAR WHITE')
 POST_TEXT = '''
-**Новый тип отбеливания от BioMed** — высокая эффективность отбеливания без повреждений.
+🌿✨ #BiomedBeats: Мы знаем, как важно найти моменты радости и покоя среди бешеного ритма жизни. 
+В связи с этим хотим поделиться своим плейлистом, который поможет начать день с белоснежной улыбки.
+Кроме того, скоро у нас выходит новая паста  - MOLECULAR WHITE, которая отлично справляется с отбеливанием зубов и на 99% безопаснее существующих аналогов 
+за счет инновационной технологии очистки.
 
-2 начно доказанных подтверждения от InterTek (UK)
+Мы подготовили для вас нечто особенное —  приглашаем создать свой собственный плейлист для чистки зубов и поделиться им с миром! 
+Почему стоит участвовать?
+Поделитесь своей музыкой: Найдите единомышленников и вдохновитесь плейлистами других.
+Будьте на волне: Участвуйте в жизни сообщества Biomed, наслаждайтесь моментами и создавайте контент, который принесет радость другим.
+Получите шанс на подарок: Лучшие плейлисты получат приятные сюрпризы от Biomed!
+Присоединяйтесь к акции #BiomedBeats и превратите ежедневную рутину в момент радости и заботы о себе. 
+Потому что даже самые простые вещи могут приносить счастье. 
 
-**0% повреждения эмали**
+Как принять участие?
+Используйте наш хэштег #BiomedBeats, чтобы все могли найти и послушать ваши любимые треки для этих волшебных минут.
 
-Отбеливание как у пероксидного отбеливания
+Плейлисты, которые нам больше всего откликнуться используем в следующем видео-рассказе MOLECULAR WHITE:)
 '''
 st.info(POST_TEXT)
 # Job Age Sex (M F)
@@ -38,7 +48,7 @@ def load_data():
     with st.spinner(text="Загрузка и индексация данных BioMed. Это займет 1-2 минуты."):
         reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
         docs = reader.load_data()
-        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an expert on the BioMed products, and also health and care specialist, including teeth and your job is to answer questions in simple words. Assume that all questions are related to BioMed. Keep your answers simple and based on facts – do not hallucinate features."))
+        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an expert on the BioMed products, and also health and care specialist, including teeth and your job is to answer questions in simple words. Assume that all questions are related to BioMed. Keep your answers simple and based on facts – do not hallucinate features. Отвечай только на русском языке."))
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
         return index
 
